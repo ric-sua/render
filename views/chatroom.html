@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <title>Rapidchatter</title>
+    <script src="/js/PeerScript.js"></script>
+  </head>
+
+  <style>
+    :root {
+      --peerlist-width: 0;
+    }
+
+    html,
+    body {
+      background-color: #222e3a;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width:100%;
+    }
+
+    .container {
+      height: 100%;
+      transition: 0.5s;
+    }
+
+    #chatBox {
+        height: 100%;
+      font-size: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      overflow-y: auto;
+      color: white;
+      padding: 30px 20px 0px 20px;
+    }
+
+    #inputBox{
+        display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 10px 20px 10px;
+  height: 50px;
+    }
+
+    #chatInput{
+      border-radius: 8px;
+      font-size: 16px !important;
+      padding-left: 10px;
+      border: none;
+      resize: none;
+    }
+
+    #send{
+      border-radius: 8px;
+      border: none;
+      background-color: #E77458;
+    }
+
+    @font-face {
+      font-family: "Russo One";
+      src: url("/images/russo_one.ttf") format("truetype");
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 9%;
+      flex-direction: row;
+      padding: 0;
+      border-bottom: 2px solid;
+      border-image: radial-gradient(
+          rgba(168, 201, 230, 1) 0%,
+          rgba(34, 46, 58, 1)
+        )
+        1;
+    }
+
+    .chatWindow {
+      height: 90%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chatWindow::-webkit-scrollbar {
+      display: none;
+    }
+
+    #type{
+        height: 80%;
+    }
+
+    #room {
+      vertical-align: middle;
+      font-size: 30px;
+      font-family: "Russo One";
+      color: bisque;
+      padding-left: 10px;
+    }
+
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      height: 80%;
+    }
+
+    #file {
+      margin-left: 5px;
+    }
+
+    #audio {
+      margin-left: 5px;
+    }
+    #share {
+      margin-left: 5px;
+    }
+
+    #menu {
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+
+    /* The side navigation menu
+    .comms {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background: none;
+      top: 5px;
+      left: 0;
+      right: 0;
+      margin: auto;
+      z-index: 1;
+      transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    
+
+    /* The navigation menu links */
+    /* .comms button {
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      transition: 0.3s;
+    } */
+
+    /* The side navigation menu */
+    .sidenav {
+      height: 100%; /* 100% Full-height */
+      width: 0; /* 0 width - change this with JavaScript */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Stay on top */
+      top: 0; /* Stay at the top */
+      left: auto;
+      right: 0;
+      background-color: #111; /* Black*/
+      overflow-x: hidden; /* Disable horizontal scroll */
+      padding-top: 60px; /* Place content 60px from the top */
+      transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    }
+
+    /* The navigation menu links */
+    .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    /* When you mouse over the navigation links, change their color */
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidenav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+
+    #inputBox > textarea {
+   -webkit-flex:1 1 auto;
+   flex:1 1 auto;
+ font-size: 12px;
+}
+#inputBox > button {
+   -webkit-flex:0 1 auto;
+   margin-left: 5px;
+   height: 50px;
+   margin-top: auto;
+   flex:0 1 auto;
+}
+
+#usermessageBox{
+  color: white;
+  text-align:right;
+  margin-left:auto;
+  font-size:20px;
+  margin-bottom:10px;
+}
+#usermessage{
+  margin-top:0px;
+  background-color:#34567A;
+  display:inline-block;
+  text-align: left;
+  max-width: 60%;
+  padding:10px;
+  word-break: break-all;
+  border-radius:10px;
+}
+
+#peermessageBox{
+  color: white;
+  text-align:left;
+  margin-right:auto;
+  font-size:20px;
+  margin-bottom:10px;
+}
+#peermessage{
+  margin-top:0px;
+  background-color:#E77458;
+  display:inline-block;
+  max-width: 60%;
+  padding:10px;
+  word-break: break-all;
+  border-radius:10px;
+}
+
+#notif{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
+      .sidenav a {
+        font-size: 18px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        width: calc(100% - var(--peerlist-width));
+      }
+      .sidenav {
+        width: var(--peerlist-width);
+      }
+    }
+
+    @media (max-width: 1199px) {
+      .sidenav {
+        width: var(--peerlist-width);
+      }
+      .container {
+        width: 100%;
+      }
+    }
+  </style>
+  <body>
+    <!-- <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Clients</a>
+      <a href="#">Contact</a>
+    </div> -->
+
+    <div class="container" id="container">
+      <div class="header">
+        <!-- <button id="type" onclick="typeOpen()">Comms</button> -->
+        <p id="room">Room: <%= room %></p>
+        <!-- <div class="right">
+          <button id="menu" onclick="openNav()">menu</button>
+        </div> -->
+      </div>
+      <div class="chatWindow" id="chatWindow">
+        <div id="chatBox">
+        </div>
+        <div id="inputBox">
+            <textarea type="text" id="chatInput" placeholder="Type a message..." ></textarea>
+            <button id="send">send</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function typeOpen() {
+      document.getElementById("comms").style.display = "flex";
+    }
+
+      const root = document.documentElement;
+      let sidenavWidth =
+        getComputedStyle(root).getPropertyValue("--peerlist-width");
+
+      let state = false;
+      window.addEventListener("resize", function () {
+        if (state) {
+          if (window.innerWidth < 1200)
+            root.style.setProperty("--peerlist-width", "300px");
+          else root.style.setProperty("--peerlist-width", "20%");
+        } else root.style.setProperty("--peerlist-width", "0px");
+      });
+
+      function openNav() {
+        if (window.innerWidth < 1200) {
+          root.style.setProperty("--peerlist-width", "300px");
+        } else {
+          root.style.setProperty("--peerlist-width", "20%");
+          document.getElementById("container").style.marginRight = "20%";
+        }
+        state = true;
+      }
+
+      /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+      function closeNav() {
+        root.style.setProperty("--peerlist-width", "0px");
+        document.getElementById("container").style.marginRight = "0";
+        state = false;
+      }
+
+
+      const textarea = document.getElementById('chatInput');
+      const inputBox = document.getElementById('inputBox');
+
+      textarea.disabled = true;
+      textarea.addEventListener('input', () => {
+          // Check if scrollHeight is greater than clientHeight
+          if(textarea.scrollHeight > textarea.clientHeight) {
+            // Textarea has scrollbar
+            inputBox.style.height = `${textarea.clientHeight + 60}px`;
+          } 
+          if(textarea.value.trim() === '')
+            inputBox.style.height = '60px';
+      }) 
+      
+      
+      let username = "<%= username %>";
+      while(username == null || username == ''){
+      let person = prompt("Please enter your username", "enter...");
+      if(person){
+      username = person;
+      break;
+      }
+      }
+
+const chatDiv = document.getElementById('chatBox');
+        let peer1 = new PeerScript({id: "<%- userId %>", group: "<%- room %>", metadata: "rarrrr"});
+  let connections = [];
+  let yp;
+  let currCo = [];
+  let co = [];
+  let recv = [];
+  (async() =>{
+    connections = await peer1.getPeers(2000)
+    connections.forEach(c => {
+      if(!currCo.includes(c)){
+        currCo.push(c);
+        connectPeers(c);
+      }
+      })
+    })();
+  
+  
+  
+  async function connectPeers(remId) {
+      const conn = await peer1.connect(remId);
+      console.log("initialized: " + remId);
+      handleConnection(conn)
+      }
+
+      function notification(inputString){
+        const div = document.createElement("div");
+        div.id = "notif";
+        div.innerText = inputString;
+        chatDiv.append(div);
+      }
+  
+      peer1.ev.addEventListener("connection", (ki) =>{
+        Object.keys(ki.detail.local).forEach((v) =>{
+          if(!co.includes(ki.detail.local)) co.push(ki.detail.local)
+        })
+        const n = ki.detail.remote;
+           n.addEventListener("open", () =>{
+               console.log("connection with peer is open..");
+                notification("new peer has joined the chat.");
+               textarea.disabled = false;
+             })
+             n.addEventListener("message", (dat) =>{
+               const txt = JSON.parse(dat.data);
+               const mdiv = document.createElement("div");
+               const indiv = document.createElement("div");
+               const pa = document.createElement("p");
+               pa.id = "peermessage";
+               mdiv.id = "peermessageBox";
+               indiv.style.marginLeft = "10px";
+               indiv.style.fontSize = "18px";
+               indiv.innerText = txt.username;
+               pa.innerText = txt.message;
+               mdiv.appendChild(indiv);
+               mdiv.appendChild(pa);
+               chatDiv.append(mdiv);
+             // chatDiv.innerHTML += `<div id="peermessageBox"><div style="margin-left:10px; font-size: 18px;">${txt.username}</div><p id="peermessage">${txt.message}</p></div>`;
+             document.querySelector("#chatBox > div:last-of-type").scrollIntoView({behavior: "smooth"});
+             })
+             n.addEventListener("close", (conn) =>{
+              notification("peer has left chat.")
+               console.log("is closed ");
+             })
+      })
+
+      peer1.ev.addEventListener("deletion", (cn) =>{
+        co = co.filter(c => c.peer !== cn.detail)
+        currCo = currCo.filter(c => c !== cn.detail)
+      })
+  
+      function handleConnection(conn) {
+        conn.addEventListener("error", function () {
+          // handle error
+          console.log("error");
+        });
+        conn.addEventListener("open", function () {
+          console.log("Connected with peer: " + conn.peer);
+          co.push(conn);
+        });
+        conn.addEventListener("close", function () {
+          // Handle connection closed
+          console.log("connection with peer: " + conn.peer + " closed");
+        });
+      }
+  
+      document.getElementById("send").addEventListener('click', () => {
+            let message = textarea.value;
+            broadcastMessage(JSON.stringify({username: username, message: message}));
+            const mdiv = document.createElement("div");
+                const indiv = document.createElement("div");
+                const pa = document.createElement("p");
+                pa.id = "usermessage";
+                mdiv.id = "usermessageBox";
+                indiv.style.marginRight = "10px";
+                indiv.style.fontSize = "18px";
+                indiv.innerText = username;
+                pa.innerText = message;
+                mdiv.appendChild(indiv);
+                mdiv.appendChild(pa);
+                chatDiv.append(mdiv);
+                textarea.value = "";
+                inputBox.style.height = '60px';
+            document.querySelector("#chatBox > div:last-of-type").scrollIntoView({behavior: "smooth"});
+        })
+  
+        function broadcastMessage(message){
+          co.forEach(i =>{   
+              i.send(message);
+            })
+        }
+    </script>
+  </body>
+</html>

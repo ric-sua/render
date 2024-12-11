@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="images/logo.png">
+  <title>Rapidchatter</title>
+</head>
+<style>
+  .login-Box{
+       border: 1px solid #93B3CE;
+       border-radius: 10px;
+       padding: 50px 0px 50px;
+       background-color: #222e3a;
+  }
+
+  form{
+    flex: 1;
+    min-width: 350px;
+    max-width: 40%;
+  }
+  
+  .input-field{
+      width: 85%;
+      margin: 0px auto;
+      margin-top: 10px;
+      margin-bottom: 40px;
+  }
+  input{
+     outline: none;
+     border-width: 0 0 2px;
+     background: none;
+  border-color: #34567A;
+     display: block;
+     width: 100%;
+     margin-top: 10px;
+     height: 1.75rem;
+     box-sizing: border-box;
+     padding: 10px 35px 20px;
+     font-size: 20px;
+     font-family: 'Open Sans', 'sans-serif';
+     color:bisque;
+  }
+
+  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { background-color: #222E3A !important; /* Change to your desired color */ -webkit-text-fill-color: bisque !important; color: bisque !important;/* Change text color if needed */ transition: background-color 5000s ease-in-out 0s; /* Prevent the color from changing back */ }
+
+  .icon-room, .icon-user, .icon-clear {
+    position: relative;
+  }
+
+  .icon-clear{
+    content: "";
+    position: absolute;
+    left: auto;
+    right: 8px;
+    top: 0;
+    bottom: 12px;
+    width: 20px;
+    background: url("images/cross.svg") center / contain no-repeat;
+    transition: 1s;
+  opacity: 0;
+  }
+  
+  .icon-room:before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 12px;
+    width: 20px;
+    background: url("images/room-service-4-svgrepo-com.svg") center / contain no-repeat;
+  }
+  
+  .icon-user:before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 12px;
+    width: 20px;
+    background: url("images/user-svgrepo-com.svg") center / contain no-repeat;
+  }
+
+  input:focus{
+    border-color: #E77458;
+  }
+  
+  label{
+      margin-top: 8px;
+      display: block;
+      font-size: 20px;
+  }
+  
+html, body {
+  margin: 0;
+  padding:0;
+  min-height: 100%;
+}
+
+.logo{
+  display: block;
+  margin: 0 auto;
+}
+
+  html{
+    background: linear-gradient(180deg, hsla(210, 26%, 18%, 1) 0%, hsla(211, 36%, 46%, 1) 100%);
+     font-family: "Russo One";
+     color:bisque;
+     background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  body{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+  }
+
+  @font-face {
+    font-family: "Russo One";
+     src: url("images/russo_one.ttf") format("truetype");
+  }
+  
+  .buttons{
+     margin-top: 30px;
+     margin-bottom: 20px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+  }
+  
+  #submit{
+    display: block;
+    margin: 0px auto;
+    margin-top: 50px;
+     width: 60%; 
+     height: 2.25rem;
+     border-radius: 5px; 
+     font-family: 'Russo One';
+     font-size: 20px;
+     background-color: #E77458;
+     color: #222E3A;
+     border: none;
+  }
+
+  #submit:hover{
+    outline: none;
+    background-color: #A8C9E6;
+    color: #222E3A;
+  }
+  
+  </style>
+  <body>
+    <form id="form" action="/rooms" method="POST">
+  <div class="login-Box">
+    <img class="logo" src="images/logo.png" width="300" />
+    <div class="input-field">
+      <label>Username</label>
+      <label class="icon-user">
+        <span class="icon-clear" id="userClear"></span>
+        <input id="user" name="username" type="text" placeholder="Enter your username" required/>
+      </label>
+      <label>Room</label>
+      <label class="icon-room">
+        <span class="icon-clear" id="roomClear"></span>
+          <input id="room" name="room" type="text" placeholder="Enter room name" required/>
+      </label>
+      <button id="submit" type="submit">Login</button>
+    </div>
+  </div>
+</form>
+<script>
+  const roomInput = document.getElementById("room")
+  const userInput = document.getElementById("user")
+  const r = crypto.randomUUID().toString();
+  roomInput.value = r;
+  const roomClear = document.getElementById('roomClear')
+  const userClear = document.getElementById("userClear")
+  const sub = document.getElementById("submit")
+
+  roomClear.addEventListener('click', (e) =>{
+    e.preventDefault();
+    roomInput.value = "";
+    roomClear.style.opacity = 0;
+  })
+
+  // sub.addEventListener("click", (e) =>{
+  //   e.preventDefault(); // Prevent the form from submitting the traditional way
+  //   const rooms = roomInput.value;
+  //           const users = userInput.value;
+  //           if(rooms.trim() == "" || users.trim() == "") 
+  //           alert("Error: One or more of the input fields is empty"); 
+  //           else
+  //           document.getElementById("form").submit();
+  // })
+
+  userClear.addEventListener('click', (e) =>{
+    e.preventDefault();
+    userInput.value = "";
+    userClear.style.opacity = 0;
+  })
+
+  if(userInput.value.trim() !== ""){
+    userClear.style.opacity = 1;
+  }
+  else {
+    userClear.style.opacity = 0;
+  }
+
+  roomClear.style.opacity = 1;
+  
+  roomInput.addEventListener("input", () =>{
+    if(roomInput.value.trim() !== ""){
+      roomClear.style.opacity = 1;
+    }
+    else {
+      roomClear.style.opacity = 0;
+    }
+  }) 
+  userInput.addEventListener("input", () =>{
+    if(userInput.value.trim() !== ""){
+      userClear.style.opacity = 1;
+    }
+    else {
+      userClear.style.opacity = 0;
+    }
+  })
+</script>
+
+  </body>
+</html>

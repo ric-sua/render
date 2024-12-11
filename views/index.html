@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+<body>
+    <script src="js/PeerScript.js"></script>
+
+    <h1></h1>
+    <script>
+let peer1 = new PeerScript({id: crypto.randomUUID().slice(1,4), group: "sheesh", metadata: "rarrrr"});
+let connections = [];
+
+let yp;
+let co = [];
+function connectPeers(remotePeerId) {
+    const conn = peer1.sendConnection(remotePeerId);
+      console.log("connected to: " + remotePeerId);
+      // connections.push(conn)
+      Object.keys(conn).forEach((v) =>{
+        handleConnection(conn[v])
+      })
+    }
+
+    peer1.addEventListener("connection", (ki) =>{
+      Object.keys(ki.detail.local).forEach((v) =>{
+        if(co.indexOf(ki.detail.local[v]) < 0) co.push(ki.detail.local[v])
+      })
+      ki.detail.remote.forEach((n) => {
+          n.addEventListener("open", () =>{
+              console.log("SIIIIIIIIIII");
+            })
+            n.addEventListener("message", (dat) =>{
+              console.log("received: " + dat.data);
+            })
+            n.addEventListener("close", () =>{
+              console.log("is clossssssssed");
+            })
+      })
+    })
+
+    function handleConnection(conn) {
+      conn.addEventListener("error", function () {
+        // handle error
+        console.log("error");
+      });
+      conn.addEventListener("open", function () {
+        console.log("Connected with peer: " + conn.peer);
+      });
+      conn.addEventListener("close", function () {
+        // Handle connection closed
+        console.log("connection with peer: " + conn.peer + " closed");
+      });
+      co.push(conn)
+    }
+</script>    
+</body>
+</html>
